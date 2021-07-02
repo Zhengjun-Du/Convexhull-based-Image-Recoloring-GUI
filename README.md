@@ -7,10 +7,10 @@ A GUI written by Qt for convex hull palette based image recoloring
 Windows 10 + Qt 5.14.1 + Visual Studio 2015
 
 ### Feature
-**Open Image and Palette**:  test the GUI use image and palette in the 'data' directory
-**MVC minxing weights:**  click the "Calc MVC" button to calculate the mixing weights
-**RGB view**:  see the point cloud of the image and its convex hull
-**Export Image**:  export recolored image
+**Open Image and Palette**:  test the GUI use image and palette in the 'data' directory 
+**MVC minxing weights:**  click the "Calc MVC" button to calculate the mixing weights 
+**RGB view**:  see the point cloud of the image and its convex hull 
+**Export Image**:  export recolored image 
 **Import/Export Palette**:  save the modified palette colors
 
 ### Reference Paper
