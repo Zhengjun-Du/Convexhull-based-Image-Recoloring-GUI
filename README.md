@@ -20,5 +20,5 @@ Windows 10 + Qt 5.14.1 + Visual Studio 2015
 
 3. Wang Y, Liu Y, Xu K. An Improved Geometric Approach for Palette‐based Image Decomposition and Recoloring[C]//Computer Graphics Forum. 2019, 38(7): 11-22.
 
-Any question, please fell free to contact me: duzqhu@aliyun.com
+Any question, please feel free to contact me: duzqhu@aliyun.com
 

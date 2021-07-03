@@ -101,7 +101,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QSlider *videoPreviewSlider = new QSlider(Qt::Horizontal);
 
     showVideoDataCheck->setCheckState(Qt::Checked);
-    showVideoDataCheck->setText("Visualize Video Data Points");
+    showVideoDataCheck->setText("Visualize Image Data Points");
 
     videoPreviewSlider->setMinimum(0);
     videoPreviewSlider->setMaximum(1000);
