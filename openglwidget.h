@@ -22,7 +22,7 @@ public:
 public slots:
     void update();
     void setTime(int t);
-    void setShowVideoData(bool _showVideoData);
+    void setShowImageData(bool _showImageData);
     void setPreview(int percentage);
 
 protected:
@@ -37,7 +37,7 @@ protected:
 
     int time = 0;
 
-    bool showVideoData = true;
+    bool showImageData = true;
     double preview =.25;
 
 };

@@ -70,9 +70,9 @@ void OpenGLWidget::setTime(int t)
     update();
 }
 
-void OpenGLWidget::setShowVideoData(bool _showVideoData)
+void OpenGLWidget::setShowImageData(bool _showImageData)
 {
-    showVideoData = _showVideoData;
+    showImageData = _showImageData;
     update();
 }
 

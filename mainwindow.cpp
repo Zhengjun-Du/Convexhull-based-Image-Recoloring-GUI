@@ -53,33 +53,31 @@ MainWindow::MainWindow(QWidget *parent) :
 	mainLayout->addLayout(firstRowLayout);
 	//top main menu==============================================================================================
 
-	//original video and recolored video=========================================================================
+	//original image and recolored image=========================================================================
     ImageWidget *recolored_image = new ImageWidget(true);
 	recolored_image->setData(data);
 
     ImageWidget *original_image = new ImageWidget(false);
 	original_image->setData(data);
 
-    videoBeforeDockWidget = new QDockWidget();
+    imageBeforeDockWidget = new QDockWidget();
+    imageBeforeDockWidget->setWidget(original_image);
+    imageBeforeDockWidget->setWindowTitle("Original Image");
+    addDockWidget(Qt::TopDockWidgetArea, imageBeforeDockWidget);
+    imageBeforeDockWidget->setFloating(true);
+    imageBeforeDockWidget->setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
+	imageBeforeDockWidget->setGeometry(760, 100, 400, 400);
+	imageBeforeDockWidget->hide();
 
-    videoBeforeDockWidget->setWidget(original_image);
-    videoBeforeDockWidget->setWindowTitle("Original Image");
-    addDockWidget(Qt::TopDockWidgetArea, videoBeforeDockWidget);
-    videoBeforeDockWidget->setFloating(true);
-    videoBeforeDockWidget->setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
-	videoBeforeDockWidget->setGeometry(760, 100, 400, 400);
-	videoBeforeDockWidget->hide();
-
-    videoAfterDockWidget = new QDockWidget();
-    videoAfterDockWidget->setWidget(recolored_image);
-    videoAfterDockWidget->setWindowTitle("Recolored Image");
-    videoAfterDockWidget->setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
-    addDockWidget(Qt::TopDockWidgetArea, videoAfterDockWidget);
-    videoAfterDockWidget->setFloating(true);
-	videoAfterDockWidget->setGeometry(760, 100, 400, 400);
-	videoAfterDockWidget->hide();
-	//original video and recolored video=========================================================================
-
+    imageAfterDockWidget = new QDockWidget();
+    imageAfterDockWidget->setWidget(recolored_image);
+    imageAfterDockWidget->setWindowTitle("Recolored Image");
+    imageAfterDockWidget->setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
+    addDockWidget(Qt::TopDockWidgetArea, imageAfterDockWidget);
+    imageAfterDockWidget->setFloating(true);
+	imageAfterDockWidget->setGeometry(760, 100, 400, 400);
+	imageAfterDockWidget->hide();
+	//original image and recolored image=========================================================================
 
 	//import and export =========================================================================================
 	QHBoxLayout *secondRowLayout = new QHBoxLayout();
@@ -93,29 +91,27 @@ MainWindow::MainWindow(QWidget *parent) :
 	secondRowLayout->addWidget(exportPaletteButton);
 	//import and export =========================================================================================
 
+	//image play and vis=========================================================================================
+    QHBoxLayout *showImageDataLayout = new QHBoxLayout();
+    QCheckBox *showImageDataCheck= new QCheckBox();
+    QLabel *showImageDataLabel = new QLabel("25.0%");
+    QSlider *imagePreviewSlider = new QSlider(Qt::Horizontal);
 
-	//video play and vis=========================================================================================
-    QHBoxLayout *showVideoDataLayout = new QHBoxLayout();
-    QCheckBox *showVideoDataCheck= new QCheckBox();
-    QLabel *showVideoDataLabel = new QLabel("25.0%");
-    QSlider *videoPreviewSlider = new QSlider(Qt::Horizontal);
+    showImageDataCheck->setCheckState(Qt::Checked);
+    showImageDataCheck->setText("Visualize Image Data Points");
 
-    showVideoDataCheck->setCheckState(Qt::Checked);
-    showVideoDataCheck->setText("Visualize Image Data Points");
+    imagePreviewSlider->setMinimum(0);
+    imagePreviewSlider->setMaximum(1000);
+    imagePreviewSlider->setValue(250);
+    showImageDataLabel->setBuddy(imagePreviewSlider);
+    showImageDataLabel->setWordWrap(false);
 
-    videoPreviewSlider->setMinimum(0);
-    videoPreviewSlider->setMaximum(1000);
-    videoPreviewSlider->setValue(250);
-    showVideoDataLabel->setBuddy(videoPreviewSlider);
-    showVideoDataLabel->setWordWrap(false);
+    connect(imagePreviewSlider, &QSlider::valueChanged,
+            [=](const int &newValue){showImageDataLabel->setText(QString::number(newValue / 10., 'f', 1) + "%");} );
 
-    connect(videoPreviewSlider, &QSlider::valueChanged,
-            [=](const int &newValue){showVideoDataLabel->setText(QString::number(newValue / 10., 'f', 1) + "%");} );
-
-    showVideoDataLayout->addWidget(showVideoDataCheck);
-    showVideoDataLayout->addWidget(videoPreviewSlider);
-    showVideoDataLayout->addWidget(showVideoDataLabel);
-
+    showImageDataLayout->addWidget(showImageDataCheck);
+    showImageDataLayout->addWidget(imagePreviewSlider);
+    showImageDataLayout->addWidget(showImageDataLabel);
 
     QHBoxLayout *timeWindowLayout = new QHBoxLayout();
     QSlider *timeWindowSlider = new QSlider(Qt::Horizontal);
@@ -129,12 +125,12 @@ MainWindow::MainWindow(QWidget *parent) :
 	QTimer *autoPlayTimer = new QTimer();
 
 	autoPlayTimer->setInterval(80);
-	//video play and vis=========================================================================================
+	//image play and vis=========================================================================================
 
 	QGroupBox *groupBox = new QGroupBox(tr("Parameters setting"));
 	QVBoxLayout *vbox = new QVBoxLayout;
 	vbox->addLayout(secondRowLayout);
-	vbox->addLayout(showVideoDataLayout);
+	vbox->addLayout(showImageDataLayout);
 	groupBox->setLayout(vbox);
 
     
@@ -181,16 +177,11 @@ MainWindow::MainWindow(QWidget *parent) :
 	mainWidget->setLayout(mainLayout);
 	this->setCentralWidget(mainWidget);
 
-    connect(slider, &QSlider::valueChanged, original_image, &ImageWidget::setTime);
-    connect(slider, &QSlider::valueChanged, recolored_image, &ImageWidget::setTime);
-    connect(slider, &QSlider::valueChanged, rgbWidget, &RGBWidget::setTime);
-    connect(slider, &QSlider::valueChanged, paletteWidget, &PaletteViewWidget::setTime);
+    connect(showImageDataCheck, &QCheckBox::stateChanged, rgbWidget, &RGBWidget::setShowImageData);
+    connect(showImageDataCheck, &QCheckBox::stateChanged, paletteWidget, &PaletteViewWidget::setShowImageData);
 
-    connect(showVideoDataCheck, &QCheckBox::stateChanged, rgbWidget, &RGBWidget::setShowVideoData);
-    connect(showVideoDataCheck, &QCheckBox::stateChanged, paletteWidget, &PaletteViewWidget::setShowVideoData);
-
-    connect(videoPreviewSlider, &QSlider::valueChanged, rgbWidget, &RGBWidget::setPreview);
-    connect(videoPreviewSlider, &QSlider::valueChanged, paletteWidget, &PaletteViewWidget::setPreview);
+    connect(imagePreviewSlider, &QSlider::valueChanged, rgbWidget, &RGBWidget::setPreview);
+    connect(imagePreviewSlider, &QSlider::valueChanged, paletteWidget, &PaletteViewWidget::setPreview);
 
     connect(openImageAndPaletteBtn, &QPushButton::clicked, [=](){this->openFile(true);});
     connect(CalcMvcBtn, &QPushButton::clicked, data, &Data::ComputeMVCWeights);
@@ -208,10 +199,9 @@ MainWindow::~MainWindow()
 {
 }
 
-// open video & poly file
-// TODO: replace input video file with H264 encoded video
-void MainWindow::openFile(bool merge)
-{
+// open image & poly file
+// TODO: replace input image file with H264 encoded image
+void MainWindow::openFile(bool merge){
     if(data == nullptr) return;
 
     QFileDialog dialog(this);
@@ -219,19 +209,16 @@ void MainWindow::openFile(bool merge)
     dialog.setNameFilter(tr("*.jpg *.png"));
     dialog.setViewMode(QFileDialog::Detail);
 
-    if (dialog.exec())
-    {
+    if (dialog.exec()){
         QStringList fileName = dialog.selectedFiles();
 
-        for(auto s : fileName)
-        {
+        for(auto s : fileName){
             data->OpenImage(QString(s));
         }
-		videoBeforeDockWidget->show();
-		videoAfterDockWidget->show();
+		imageBeforeDockWidget->show();
+		imageAfterDockWidget->show();
     }
-    else
-    {
+    else{
         return;
     }
 
@@ -283,8 +270,7 @@ void MainWindow::importPalette() {
 	fileDialog.setViewMode(QFileDialog::Detail);
 
 	QStringList dirName;
-	if (fileDialog.exec() == QDialog::Accepted)
-	{
+	if (fileDialog.exec() == QDialog::Accepted){
 		dirName = fileDialog.selectedFiles();
 		string dirNamestr = dirName[0].toStdString();
 		data->ImportChangedPalette(dirNamestr);

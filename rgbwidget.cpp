@@ -76,7 +76,7 @@ void RGBWidget::paintGL()
 	const double *vertex = nullptr;
 	const int *line = nullptr;
 
-	if (showVideoData)
+	if (showImageData)
 	{
 		QRandomGenerator rng;
 

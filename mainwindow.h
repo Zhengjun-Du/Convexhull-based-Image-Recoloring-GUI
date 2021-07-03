@@ -14,8 +14,8 @@ public:
     ~MainWindow();
 
 private:
-	QDockWidget *videoBeforeDockWidget = nullptr;
-	QDockWidget *videoAfterDockWidget = nullptr;
+	QDockWidget *imageBeforeDockWidget = nullptr;
+	QDockWidget *imageAfterDockWidget = nullptr;
 	void exportImage();
 	void importPalette();
 	void exportPalette();
